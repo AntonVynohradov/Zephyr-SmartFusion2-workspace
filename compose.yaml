@@ -1,0 +1,23 @@
+services:
+
+  zephyr:
+    image: zephyr-sf2:0.17.4
+
+    working_dir: /workspace
+
+    volumes:
+      - .:/workspace
+      - ./.ccache:/ccache
+
+    environment:
+      CCACHE_DIR: /ccache
+      ZEPHYR_TOOLCHAIN_VARIANT: zephyr
+      ZEPHYR_SDK_INSTALL_DIR: /opt/zephyr-sdk
+
+    command:
+      - west
+      - build
+      - -b
+      - m2s010_mkr_kit/m2s010
+      - -d
+      - build

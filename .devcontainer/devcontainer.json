@@ -1,0 +1,75 @@
+{
+    "name": "Zephyr RTOS - SmartFusion2 M2S010",
+
+    "build": {
+        "dockerfile": "../Dockerfile",
+        "context": "..",
+        "args": {
+            "WEST_VERSION": "1.4.0",
+            "ZEPHYR_SDK_VERSION": "0.17.4"
+        }
+    },
+
+    "remoteUser": "root",
+
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "workspaceFolder": "/workspace",
+
+    "mounts": [
+        "source=${localWorkspaceFolder}/.ccache,target=/ccache,type=bind,consistency=cached"
+    ],
+
+    "containerEnv": {
+        "CCACHE_DIR": "/ccache",
+        "ZEPHYR_TOOLCHAIN_VARIANT": "zephyr",
+        "ZEPHYR_SDK_INSTALL_DIR": "/opt/zephyr-sdk",
+        "BOARD": "m2s010_mkr_kit/m2s010"
+    },
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "zephyr-project-rtos.zephyr-ide",
+                "ms-vscode.cpptools",
+                "ms-vscode.cmake-tools",
+                "marus25.cortex-debug",
+                "ms-vscode.vscode-serial-monitor"
+            ],
+
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+
+                "C_Cpp.default.compilerPath": "/opt/zephyr-sdk/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc",
+
+                "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+
+                "C_Cpp.default.intelliSenseMode": "linux-gcc-arm",
+
+                "cmake.configureOnOpen": false,
+
+                "cmake.buildDirectory": "${workspaceFolder}/build",
+
+                "files.exclude": {
+                    "**/.git": true,
+                    "**/.west": true
+                },
+
+                "search.exclude": {
+                    "**/build": true,
+                    "**/.west": true,
+                    "**/.ccache": true
+                },
+
+                "editor.formatOnSave": false
+            }
+        }
+    },
+
+    "postCreateCommand": "ccache --zero-stats || true",
+
+    "postStartCommand": "echo 'Zephyr SmartFusion2 development container ready' && echo 'Board: m2s010_mkr_kit/m2s010' && west --version && arm-zephyr-eabi-gcc --version",
+
+    "shutdownAction": "stopContainer",
+
+    "overrideCommand": true
+}

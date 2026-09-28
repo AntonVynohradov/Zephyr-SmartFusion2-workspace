@@ -1,0 +1,106 @@
+{
+    "version": "2.0.0",
+
+    "tasks": [
+        {
+            "label": "Zephyr: Workspace Menu",
+            "type": "process",
+            "command": "bash",
+            "args": [
+                "-lc",
+                "case \"${input:zephyrAction}\" in\n  'Initialize + update')\n    if west topdir >/dev/null 2>&1; then\n      echo 'West workspace already initialized; updating dependencies.'\n      west update\n    else\n      west init -l \"${workspaceFolder}\" && west update\n    fi\n    ;;\n  'Update dependencies') west update ;;\n  'Build firmware') west build -b m2s010_mkr_kit/m2s010 -d build ;;\nesac"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+
+        {
+            "label": "Zephyr: Build",
+            "type": "shell",
+            "command": "west",
+            "args": [
+                "build",
+                "-b",
+                "m2s010_mkr_kit/m2s010",
+                "-d",
+                "build"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+
+        {
+            "label": "Zephyr: Pristine Build",
+            "type": "shell",
+            "command": "west",
+            "args": [
+                "build",
+                "-p",
+                "always",
+                "-b",
+                "m2s010_mkr_kit/m2s010",
+                "-d",
+                "build"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "problemMatcher": []
+        },
+
+        {
+            "label": "Zephyr: Clean",
+            "type": "shell",
+            "command": "rm",
+            "args": [
+                "-rf",
+                "build"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+
+        {
+            "label": "Zephyr: Ccache Stats",
+            "type": "shell",
+            "command": "ccache",
+            "args": [
+                "--show-stats"
+            ],
+            "problemMatcher": []
+        },
+
+        {
+            "label": "Zephyr: Ccache Clear",
+            "type": "shell",
+            "command": "ccache",
+            "args": [
+                "--clear"
+            ],
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "zephyrAction",
+            "type": "pickString",
+            "description": "Choose a West workspace action",
+            "options": [
+                "Initialize + update",
+                "Update dependencies",
+                "Build firmware"
+            ]
+        }
+    ]
+}
