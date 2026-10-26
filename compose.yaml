@@ -1,7 +1,7 @@
 services:
 
   zephyr:
-    image: zephyr-sf2:0.17.4
+    image: zephyr-sf2:1.0.1
 
     working_dir: /workspace
 

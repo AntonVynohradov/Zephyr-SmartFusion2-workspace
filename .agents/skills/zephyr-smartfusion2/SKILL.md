@@ -137,11 +137,14 @@ The Zephyr SDK is installed under:
 /opt/zephyr-sdk
 ```
 
-The ARM toolchain is expected under:
+The ARM toolchain is expected under (Zephyr SDK 1.0 layout):
 
 ```text
-/opt/zephyr-sdk/arm-zephyr-eabi/bin
+/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin
 ```
+
+The board `m2s010_mkr_kit/m2s010` exists in Zephyr 4.5 and later, which needs
+Python 3.12 or later and Zephyr SDK 1.0.
 
 Do not introduce another ARM toolchain unless explicitly required.
 

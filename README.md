@@ -129,7 +129,8 @@ extension.
 
 ## Repository Structure
 
-Example repository structure:
+Repository structure (the root is a Zephyr application: a starter that blinks
+`led0` and prints a heartbeat on the console; replace it with your firmware):
 
 ```text
 .
@@ -143,17 +144,13 @@ Example repository structure:
 ├── src/
 │   └── main.c
 │
-├── scripts/
-│   └── build.sh
-│
 ├── Dockerfile
 ├── .dockerignore
 ├── .gitignore
 ├── compose.yaml
 ├── west.yml
 ├── CMakeLists.txt
-├── prj.conf
-└── app.overlay
+└── prj.conf
 ```
 
 Generated directories such as `build/` and `.ccache/` should not be committed to the repository.
@@ -164,20 +161,24 @@ Generated directories such as `build/` and `.ccache/` should not be committed to
 
 The environment uses explicitly defined tool versions.
 
-Example configuration:
+Current configuration:
 
 | Tool       | Version                 |
 | ---------- | ----------------------- |
-| Base image | Debian Bookworm Slim    |
-| west       | 1.4.0                   |
-| Zephyr SDK | 0.17.4                  |
-| Toolchain  | ARM `arm-zephyr-eabi`   |
-| CMake      | Debian-provided version |
+| Base image | `python:3.12-slim-bookworm` (pinned by digest) |
+| Python     | 3.12 (Zephyr 4.5 requires 3.12 or later) |
+| Zephyr     | v4.5.0-rc3 (`west.yml`; v4.5.0 once tagged) |
+| west       | 1.5.0                   |
+| Zephyr SDK | 1.0.1 (checksums verified) |
+| Toolchain  | ARM `arm-zephyr-eabi` in `/opt/zephyr-sdk/gnu` |
+| CMake      | 3.30.5 (pip)            |
 | Ninja      | Debian-provided version |
 | ccache     | Debian-provided version |
 | Board      | `m2s010_mkr_kit/m2s010` |
 
-The SDK and `west` versions are defined in the `Dockerfile`.
+The SDK and `west` versions are defined in the `Dockerfile`; the Zephyr revision in
+`west.yml`. The `m2s010_mkr_kit` board is part of Zephyr from 4.5, so older Zephyr
+revisions do not build for it.
 
 Avoid using `latest` for critical toolchain components.
 
@@ -640,7 +641,7 @@ Build the image directly:
 
 ```bash
 docker build \
-    -t zephyr-sf2:0.17.4 \
+    -t zephyr-sf2:1.0.1 \
     .
 ```
 
@@ -651,7 +652,7 @@ docker run --rm -it \
     -v "$PWD:/workspace" \
     -v "$PWD/.ccache:/ccache" \
     -w /workspace \
-    zephyr-sf2:0.17.4
+    zephyr-sf2:1.0.1
 ```
 
 Then build:
@@ -687,13 +688,13 @@ Dockerfile
 For example:
 
 ```dockerfile
-ARG ZEPHYR_SDK_VERSION=0.17.4
+ARG ZEPHYR_SDK_VERSION=1.0.1
 ```
 
 The `west` version is defined as:
 
 ```dockerfile
-ARG WEST_VERSION=1.4.0
+ARG WEST_VERSION=1.5.0
 ```
 
 After changing a tool version, rebuild the image:
@@ -802,7 +803,7 @@ west build -s <application-directory> \
 Check:
 
 ```bash
-ls /opt/zephyr-sdk/arm-zephyr-eabi/bin/
+ls /opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/
 ```
 
 and:
@@ -814,7 +815,7 @@ echo $PATH
 The PATH should contain:
 
 ```text
-/opt/zephyr-sdk/arm-zephyr-eabi/bin
+/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin
 ```
 
 ---

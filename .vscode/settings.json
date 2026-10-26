@@ -1,5 +1,5 @@
 {
-    "C_Cpp.default.compilerPath": "/opt/zephyr-sdk/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc",
+    "C_Cpp.default.compilerPath": "/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc",
 
     "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
 
